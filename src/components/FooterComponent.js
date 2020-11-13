@@ -28,7 +28,7 @@ const Footer = (props) =>{
                          confusion@food.net</a>
                     </address>
                 </div>
-                <div className="col-12 col-sm-4 align-self-center">
+                <div className="col-12 col-sm-4 align-self-center ">
                     <div className="text-center">
                         <a className="btn btn-social-icon btn-google" href="http://google.com/+"><i className="fa fa-google-plus"></i></a>
                         <a className="btn btn-social-icon btn-facebook" href="http://www.facebook.com/profile.php?id="><i className="fa fa-facebook"></i></a>
