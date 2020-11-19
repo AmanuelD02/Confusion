@@ -1,6 +1,117 @@
-import React from 'react'
-import { Card , CardImg, CardBody, CardTitle, CardText, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import React, { Component} from 'react'
+import { Card , CardImg, CardBody, CardTitle, CardText, Breadcrumb, BreadcrumbItem,
+             Button, Modal, ModalBody, ModalHeader, Label, Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import {LocalForm, Control, Errors } from 'react-redux-form';
+
+const required = (val) => val && val.length;
+const maxLength = (len) => (val) => !(val) || (val.length <=len);
+const minLength = (len) => (val) => val && (val.length >=len);
+
+class CommentForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            CommentTogggle:false
+        }
+        this.commentToggle = this.commentToggle.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    commentToggle() {
+        this.setState({ CommentTogggle:!this.state.CommentTogggle })
+    }
+    
+    handleSubmit(values) {
+        console.log('Current state:' +JSON.stringify(values));
+        alert('Current State is: ' +JSON.stringify(values));
+        this.commentToggle();
+    }
+
+    render() {
+        return(
+            <div className='container'>
+                <Button onClick={this.commentToggle} className="btn-outline-secondary"><span className="fa fa-pencil"> Submit Comment</span></Button>
+            <Modal isOpen={this.state.CommentTogggle} toggle={this.commentToggle}>
+                <ModalHeader toggle={this.commentToggle}>Submit Comment</ModalHeader>
+                <ModalBody>
+                    <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                        <Row className='form-group'>
+                            <Col md={12}><label htmlFor='rating'>Rating</label></Col>
+                            <Col>
+                            <Control.select model='.rating' id='rating' name='rating' className='form-control browser-default custom-select'>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </Control.select>
+                            </Col>
+                        </Row>
+                        <Row className='form-group'>
+                            <Col md={12}>
+                            <label htmlFor='name'>Your Name</label>
+                            </Col>
+                            <Col>
+                            <Control.text model='.name' id='name' name='name' className='form-control' 
+                                placeholder='Your Name'
+                                validators={{
+                                    required,
+                                    minLength:minLength(3),
+                                    maxLength:maxLength(15)
+                                }}
+                                 />
+                            <Errors
+                                className='text-danger'
+                                model='.name'
+                                show='touched'
+                                messages={{
+                                        required: 'Required!  ',
+                                        minLength: 'Must be greater than 2 characters!  ',
+                                        maxLength: 'Must be 15 characters or less!  '                                  
+                                }} />
+                            </Col>
+                    
+                        </Row>
+                        <Row className="form-group">
+                            <Label htmlFor="message" md={12}>Your Feedback</Label>
+                            <Col >
+                                <Control.textarea model=".message" id="message" name="message"
+                                    rows="6"
+                                    className="form-control z-depth-1"
+                                    validators={{required}} />
+                                    <Errors 
+                                        className="text-danger"
+                                        model=".message"
+                                        show="touched"
+                                        messages={{
+                                            required:"Message is required!"
+                                        }}/>
+
+                            </Col>
+                        </Row>
+                        <Row className='form-group'>
+                            <Col>
+                            <Button tyoe='submit' color='primary'>
+                                Submit
+                            </Button>
+                            </Col>
+                             
+                        </Row>
+                    </LocalForm>
+
+                </ModalBody>
+
+                
+            </Modal>
+            </div>
+
+
+
+        );
+    }
+}
+
 
 
 function RenderComments({comments}) {
@@ -73,8 +184,10 @@ const DishDetail =  (props) => {
                    
                         <RenderDish dish={props.dish} />
                     
-                    
+                        <div className='col'>       
                         <RenderComments comments={props.comments} />
+                        <CommentForm />
+                        </div>
                    
                 </div>
             </div>
@@ -91,6 +204,8 @@ const DishDetail =  (props) => {
 
 
     }
+
+
 
 
 
