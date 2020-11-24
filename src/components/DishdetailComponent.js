@@ -2,8 +2,9 @@ import React, { Component} from 'react'
 import { Card , CardImg, CardBody, CardTitle, CardText, Breadcrumb, BreadcrumbItem,
              Button, Modal, ModalBody, ModalHeader, Label, Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import {LocalForm, Control, Errors } from 'react-redux-form';
+import {LocalForm, Control, Errors, Form } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
+import {baseUrl} from '../shared/baseUrl'
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <=len);
@@ -20,7 +21,8 @@ class CommentForm extends Component {
     }
 
     commentToggle() {
-        this.setState({ CommentTogggle:!this.state.CommentTogggle })
+        this.setState({ CommentTogggle:!this.state.CommentTogggle });
+        console.log('Comment Toggle: ' + this.state.CommentTogggle);
     }
     
     handleSubmit(values) {
@@ -37,7 +39,7 @@ class CommentForm extends Component {
                 <Modal isOpen={this.state.CommentTogggle} toggle={this.commentToggle}>
                     <ModalHeader toggle={this.commentToggle}>Submit Comment</ModalHeader>
                     <ModalBody>
-                        <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                        <Form onSubmit={(values) => this.handleSubmit(values)}>
                             <Row className='form-group'>
                                 <Col md={12}><label htmlFor='rating'>Rating</label></Col>
                                 <Col>
@@ -99,7 +101,7 @@ class CommentForm extends Component {
                                 </Button>
                                 </Col>        
                             </Row>
-                        </LocalForm>
+                        </Form>
                     </ModalBody>
                 </Modal>
                 </div>
@@ -149,11 +151,12 @@ function RenderComments({comments,addComment,dishId}) {
 
 
 function RenderDish({dish}) {
+    if(dish){
     return (
   
         <div className="col-12 col-md-5 m-1">
             <Card>
-                <CardImg top src = {dish.image} />
+                <CardImg top src = {baseUrl + dish.image} />
                 <CardBody>
                     <CardTitle>{dish.name}</CardTitle>
                     <CardText> {dish.description}</CardText>
@@ -162,6 +165,9 @@ function RenderDish({dish}) {
         </div>
         
     );
+    } else {
+        return(<div></div>);
+    }
 
 }
 
